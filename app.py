@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import re
-from googlesearch import search
+from duckduckgo_search import DDGS
 from urllib.parse import urlparse, urljoin
 
 # --- Configuration ---
@@ -128,21 +128,19 @@ if start_btn:
         # Step 1: Discovery
         found_urls = []
         try:
-            # Using googlesearch-python
-            # stop is deprecated in some versions, but num is usually supported.
-            # safe search might be needed?
-            # Adjusting to standard googlesearch usage
-            search_results = search(query, num_results=20, advanced=True)
-            for result in search_results:
-                found_urls.append((result.title, result.url))
-                if len(found_urls) >= 20:
-                    break
+            # Using DuckDuckGo Search (ddgs)
+            # max_results controls how many results to fetch
+            search_results = DDGS().text(query, max_results=20)
+            if search_results:
+                for result in search_results:
+                    # ddgs returns a list of dicts with 'title' and 'href' (and 'body')
+                    found_urls.append((result.get('title'), result.get('href')))
         except Exception as e:
             st.error(f"Error during search: {e}")
             
-        # Fallback if search fails or returns nothing (e.g. rate limit or blocking)
+        # Fallback if search fails or returns nothing
         if not found_urls:
-            st.warning("Search API returned no results (likely due to automated query limits). Using placeholder data for demonstration.")
+            st.warning("Search returned no results. This might be due to rate limiting or no results found. Using placeholder data for demonstration.")
             found_urls = [
                 ("Example Business A", "http://example.com"),
                 ("Example Business B", "http://example.org"),
@@ -203,3 +201,4 @@ if start_btn:
                     file_name='audit_results.csv',
                     mime='text/csv',
                 )
+
