@@ -4,7 +4,7 @@ This is a Python-based tool built with [Streamlit](https://streamlit.io/) that h
 
 ## Features
 
-- **Lead Discovery**: Search for businesses by Niche and Region.
+- **Lead Discovery**: Search for businesses by Niche and Region (uses DuckDuckGo).
 - **Website Audit**: Check for:
   - Slow Page Load (> 3 seconds)
   - Missing SEO Meta Tags (Title, Description)
